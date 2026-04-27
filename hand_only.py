@@ -28,10 +28,27 @@ except Exception as e:
     raise
 
 
+def find_image_path(local_dir, fallback_dir):
+    """Find image file with flexible extension (.jpeg or .jpg)"""
+    for ext in ['hand.jpeg', 'hand.jpg']:
+        local_path = local_dir / 'images' / ext
+        if local_path.exists():
+            return local_path
+    
+    # Fallback to original directory
+    for ext in ['hand.jpeg', 'hand.jpg']:
+        fallback_path = fallback_dir / 'images' / ext
+        if fallback_path.exists():
+            return fallback_path
+    
+    # Default to .jpeg if nothing found
+    return fallback_dir / 'images' / 'hand.jpeg'
+
+
 def main():
     # Prefer local model/image if available
     model_path = (LOCAL_HAND / 'model' / 'hand_landmarker.task') if (LOCAL_HAND / 'model' / 'hand_landmarker.task').exists() else (HAND_DIR / 'model' / 'hand_landmarker.task')
-    image_path = (LOCAL_HAND / 'images' / 'hand.jpeg') if (LOCAL_HAND / 'images' / 'hand.jpeg').exists() else (HAND_DIR / 'images' / 'hand.jpeg')
+    image_path = find_image_path(LOCAL_HAND, HAND_DIR)
     output_path = (LOCAL_HAND / 'output_pc6.jpg') if LOCAL_HAND.exists() else (HAND_DIR / 'output_pc6.jpg')
 
     print(f"[HAND_ONLY] Running PC6 detection: image={image_path} model={model_path} output={output_path}")
