@@ -68,8 +68,6 @@ poetry.lock
 *.bin
 
 # Project-specific model and output folders
-ear/model/
-hand/model/
 output/
 ear/runs/
 **/runs/
